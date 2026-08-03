@@ -29,3 +29,22 @@
 - **Eliminación de Constraints Duplicadas:** Se retiró la restricción referencial de clave única (`UNIQUE`) sobre la columna `fecha` en `cierres_diarios`, permitiendo a los cajeros exportar múltiples balances en el transcurso del mismo día (shifts transaccionales).
 - **Parche PDF Seguro:** Corrección de un fallo de JavaScript en `jspdf-autotable` inyectando Optional Chaining indirecto `(doc.lastAutoTable && doc.lastAutoTable.finalY) || 45` para asegurar la renderización en inventarios vacíos.
 - **Limpieza para Entorno de Producción:** Ejecución del comando de purga absoluta (`TRUNCATE TABLE ventas, cierres_diarios RESTART IDENTITY CASCADE;`) borrando todo el rastro de la data de testeo, reseteando los ID automáticos a 1, y aislando el catálogo real del negocio.
+
+***
+
+## 🔒 Implementación de Arquitectura de Seguridad y Persistencia (Supabase Auth)
+
+### 1. Interfaz de Autenticación (Frontend Gatekeeper)
+- **Creación del Componente de Login:** Se diseñó e integró un nuevo componente `Login.jsx` junto a sus hojas de estilo (`Login.css`). Este componente actúa como un muro de contención renderizado condicionalmente desde `App.jsx`.
+- **Sincronización de Sesión Global:** Se refactorizó `App.jsx` para escuchar activamente el estado de autenticación utilizando los métodos `supabase.auth.getSession()` y `supabase.auth.onAuthStateChange()`, manejando automáticamente la inyección del token JWT y mostrando una pantalla de carga transitoria para evitar parpadeos visuales (*flickering*).
+
+### 2. Seguridad Criptográfica y Backend (Supabase)
+- **Autenticación Real (BaaS):** Se eliminó la validación insegura de contraseñas en texto plano del lado del cliente. Ahora `Login.jsx` utiliza la API `signInWithPassword` conectada directamente a los servidores de Supabase, utilizando una cuenta interna (correo fantasma).
+- **Blindaje de Base de Datos (RLS Stricto):** Se ejecutaron sentencias SQL para **destruir permanentemente** todas las políticas de acceso anónimo (`anon`) que dejaban vulnerables las tablas. Se crearon tres nuevas políticas restrictivas:
+  - `CREATE POLICY "Lectura y escritura productos" ON productos FOR ALL TO authenticated...`
+  - `CREATE POLICY "Lectura y escritura ventas"...`
+  - `CREATE POLICY "Lectura y escritura cierres_diarios"...`
+- Ahora la base de datos es inmune a ataques de inyección, manipulaciones por consola o peticiones API externas que carezcan del JWT generado por el componente Login.
+
+### 3. Mejoras de Usabilidad (Persistencia de Estado)
+- **Persistencia del Modo Edición:** Se solucionó el bug donde la recarga de la página (F5) reseteaba el estado administrativo. Se integró una función de inicialización *lazy* en `PosMenu.jsx` utilizando `sessionStorage`, respaldada por un `useEffect` que sincroniza los cambios en tiempo real. Ahora el sistema memoriza si el panel de control estaba encendido o apagado durante todo el ciclo de vida de la pestaña.

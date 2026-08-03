@@ -13,7 +13,15 @@ export default function PosMenu() {
   const [catalog, setCatalog] = useState([]);
 
   // Bandera de estado para alternar la funcionalidad de los botones (cobro vs actualizacion).
-  const [isEditMode, setIsEditMode] = useState(false);
+  // Inicializada desde sessionStorage para persistir ante recargas de pagina.
+  const [isEditMode, setIsEditMode] = useState(() => {
+    return sessionStorage.getItem('paleteria_edit_mode') === 'true';
+  });
+
+  // Sincronizar el estado de isEditMode con sessionStorage cada vez que cambie.
+  useEffect(() => {
+    sessionStorage.setItem('paleteria_edit_mode', isEditMode);
+  }, [isEditMode]);
   
   // Estado local para prevenir iteraciones de red multiples durante el guardado o edicion.
   const [isProcessing, setIsProcessing] = useState(false);
