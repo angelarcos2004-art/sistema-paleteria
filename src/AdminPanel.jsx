@@ -17,7 +17,7 @@ export default function AdminPanel({ onClose, isEditMode, setIsEditMode }) {
         </div>
         <div className="admin-body">
           <p className="admin-description">
-            Configuraciones del catalogo y utilidades financieras.
+            Opciones para modificar el menú y gestionar los cortes de caja.
           </p>
           <button 
             className={`admin-action-btn edit-mode-btn ${isEditMode ? 'active' : ''}`}
