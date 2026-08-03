@@ -1,0 +1,289 @@
+/* Contenedor principal estructurado con Flexbox para dividir la pantalla en dos secciones verticales */
+.pos-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: #121212;
+  color: #ffffff;
+}
+
+/* Seccion superior asignada para visualizar la lista de la cuenta actual */
+.bill-section {
+  padding: 1.5rem;
+  background-color: #1e1e1e;
+  border-bottom: 2px solid #333333;
+  max-height: 35vh;
+  overflow-y: auto;
+}
+
+.bill-section h2 {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.5rem;
+}
+
+.bill-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.removable-item {
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+}
+
+.removable-item:hover {
+  background-color: #2a2a2a;
+}
+
+.removable-item:active {
+  background-color: #333333;
+}
+
+.remove-icon {
+  color: #dc3545;
+  font-weight: bold;
+  margin-left: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.summary-text {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #aaaaaa;
+}
+
+.bill-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bill-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #333333;
+  font-size: 1.2rem;
+}
+
+.item-quantity {
+  font-weight: bold;
+  color: #4da6ff;
+}
+
+/* Seccion inferior que toma el espacio restante del viewport para la cuadricula de botones */
+.grid-section {
+  flex-grow: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.grid-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.settings-icon-btn {
+  background: none;
+  border: none;
+  color: #aaaaaa;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  line-height: 1;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.settings-icon-btn:hover {
+  color: #ffffff;
+  transform: rotate(45deg);
+}
+
+.flavor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 1rem;
+  padding-bottom: 2rem;
+}
+
+.flavor-grid.edit-mode .flavor-button {
+  border: 2px dashed #ffc107;
+  background-color: #2a2618;
+}
+
+/* Estilos de botones tactiles optimizados para hit-boxes grandes en pantallas de celular */
+.flavor-button {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: 1px solid #444444;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 1.5rem 0.5rem;
+  cursor: pointer;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  word-wrap: break-word;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.1s ease, background-color 0.1s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.flavor-button:active {
+  background-color: #4da6ff;
+  transform: scale(0.96);
+  color: #000000;
+}
+
+.flavor-name-label {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.flavor-price-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: normal;
+  opacity: 0.7;
+  margin-top: 0.3rem;
+}
+
+/* Boton de procesamiento de transaccion hacia la base de datos */
+.checkout-button {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 1rem;
+  background-color: #28a745;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.checkout-button:disabled {
+  background-color: #555555;
+  cursor: not-allowed;
+  color: #aaaaaa;
+}
+
+.checkout-button:active:not(:disabled) {
+  background-color: #218838;
+}
+
+/* Modal personalizado para la actualizacion de precios */
+.custom-prompt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.custom-prompt-modal {
+  background-color: #2a2a2a;
+  border: 1px solid #444444;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  text-align: center;
+}
+
+.custom-prompt-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  font-size: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #555555;
+  background-color: #1e1e1e;
+  color: #ffffff;
+  text-align: center;
+  outline: none;
+}
+
+.custom-prompt-input:focus {
+  border-color: #4da6ff;
+}
+
+.custom-prompt-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.prompt-cancel-btn, .prompt-confirm-btn {
+  flex: 1;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.prompt-cancel-btn {
+  background-color: #555555;
+  color: #ffffff;
+}
+
+.prompt-confirm-btn {
+  background-color: #4da6ff;
+  color: #000000;
+}
+
+.prompt-delete-btn {
+  flex: 1;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  background-color: #dc3545;
+  color: white;
+}
+
+.prompt-delete-btn:active {
+  opacity: 0.8;
+}
+
+.flavor-add-button {
+  border: 2px dashed #4da6ff !important;
+  background-color: transparent !important;
+  color: #4da6ff !important;
+}
+
+.flavor-add-button:active {
+  background-color: rgba(77, 166, 255, 0.1) !important;
+}
