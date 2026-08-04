@@ -1,26 +1,28 @@
-/* Contenedor principal estructurado con Flexbox para dividir la pantalla en dos secciones verticales */
+/* Main container configured with Flexbox for full viewport height */
 .pos-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  font-family: system-ui, -apple-system, sans-serif;
-  background-color: #121212;
-  color: #ffffff;
+  background-color: var(--primary-pink);
+  color: var(--text-dark);
 }
 
-/* Seccion superior asignada para visualizar la lista de la cuenta actual */
+/* Upper section for active bill display */
 .bill-section {
-  padding: 1.5rem;
-  background-color: #1e1e1e;
-  border-bottom: 2px solid #333333;
-  max-height: 35vh;
-  overflow-y: auto;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+  max-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0 0 24px 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .bill-section h2 {
-  margin-top: 0;
-  margin-bottom: 0;
-  font-size: 1.5rem;
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--text-dark);
 }
 
 .bill-header {
@@ -32,21 +34,21 @@
 
 .removable-item {
   cursor: pointer;
-  transition: background-color 0.1s ease;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  padding: 0.5rem;
+  border-radius: 12px;
 }
 
 .removable-item:hover {
-  background-color: #2a2a2a;
+  background-color: rgba(255, 255, 255, 0.6);
 }
 
 .removable-item:active {
-  background-color: #333333;
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 .remove-icon {
-  color: #dc3545;
+  color: #ff5252;
   font-weight: bold;
   margin-left: 0.5rem;
   font-size: 0.9rem;
@@ -56,31 +58,33 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.5rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: bold;
-  color: #aaaaaa;
+  color: var(--text-dark);
 }
 
 .bill-list {
   list-style: none;
   padding: 0;
   margin: 0;
+  overflow-y: auto;
+  flex-grow: 1;
 }
 
 .bill-item {
   display: flex;
   justify-content: space-between;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid #333333;
-  font-size: 1.2rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  font-size: 1.1rem;
 }
 
 .item-quantity {
   font-weight: bold;
-  color: #4da6ff;
+  color: #0288d1;
 }
 
-/* Seccion inferior que toma el espacio restante del viewport para la cuadricula de botones */
+/* Lower section utilizing remaining viewport space */
 .grid-section {
   flex-grow: 1;
   padding: 1rem;
@@ -94,125 +98,156 @@
 }
 
 .settings-icon-btn {
-  background: none;
+  background: var(--secondary-blue);
   border: none;
-  color: #aaaaaa;
-  font-size: 2rem;
+  color: var(--text-dark);
+  font-size: 1.5rem;
   cursor: pointer;
   padding: 0.5rem;
+  border-radius: 50%;
   line-height: 1;
-  transition: transform 0.2s ease, color 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 4px 4px 10px var(--clay-shadow-dark), -4px -4px 10px var(--clay-shadow-light);
 }
 
-.settings-icon-btn:hover {
-  color: #ffffff;
-  transform: rotate(45deg);
+.settings-icon-btn:active {
+  transform: scale(0.95) rotate(45deg);
+  box-shadow: inset 4px 4px 10px var(--clay-shadow-dark), inset -4px -4px 10px var(--clay-shadow-light);
 }
 
+/* Mobile-first grid setup */
 .flavor-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
   padding-bottom: 2rem;
 }
 
-.flavor-grid.edit-mode .flavor-button {
-  border: 2px dashed #ffc107;
-  background-color: #2a2618;
+/* Tablet and desktop breakpoints */
+@media (min-width: 600px) {
+  .flavor-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
-/* Estilos de botones tactiles optimizados para hit-boxes grandes en pantallas de celular */
+@media (min-width: 900px) {
+  .flavor-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.flavor-grid.edit-mode .flavor-button {
+  border: 2px dashed #ffb300;
+  background-color: var(--secondary-vanilla);
+}
+
+/* Claymorphism styles applied to the touch buttons */
 .flavor-button {
-  background-color: #2a2a2a;
-  color: #ffffff;
-  border: 1px solid #444444;
-  border-radius: 12px;
-  font-size: 1.2rem;
-  font-weight: 600;
-  padding: 1.5rem 0.5rem;
+  background-color: var(--secondary-mint);
+  color: var(--text-dark);
+  border: none;
+  border-radius: var(--clay-border-radius);
+  padding: 1rem;
   cursor: pointer;
-  min-height: 120px;
+  min-height: 160px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   text-align: center;
-  word-wrap: break-word;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  transition: transform 0.1s ease, background-color 0.1s ease;
+  box-shadow: 
+    8px 8px 16px var(--clay-shadow-dark), 
+    -8px -8px 16px var(--clay-shadow-light);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
 
 .flavor-button:active {
-  background-color: #4da6ff;
-  transform: scale(0.96);
-  color: #000000;
+  transform: scale(0.95);
+  box-shadow: 
+    inset 6px 6px 12px var(--clay-shadow-dark), 
+    inset -6px -6px 12px var(--clay-shadow-light);
+}
+
+/* Dynamic image container configuration */
+.flavor-image {
+  width: 100%;
+  max-height: 80px;
+  object-fit: contain;
+  margin-bottom: 0.5rem;
+  filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.1));
 }
 
 .flavor-name-label {
   display: block;
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .flavor-price-label {
   display: block;
-  font-size: 0.9rem;
-  font-weight: normal;
-  opacity: 0.7;
-  margin-top: 0.3rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  opacity: 0.8;
+  margin-top: 0.25rem;
+  color: #00796b;
 }
 
-/* Boton de procesamiento de transaccion hacia la base de datos */
+/* Transaction processing button */
 .checkout-button {
   margin-top: 1rem;
   width: 100%;
   padding: 1rem;
-  background-color: #28a745;
-  color: #ffffff;
+  background-color: var(--secondary-mint);
+  color: var(--text-dark);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--clay-border-radius);
   font-size: 1.2rem;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.checkout-button:disabled {
-  background-color: #555555;
-  cursor: not-allowed;
-  color: #aaaaaa;
+  box-shadow: 6px 6px 12px var(--clay-shadow-dark), -6px -6px 12px var(--clay-shadow-light);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .checkout-button:active:not(:disabled) {
-  background-color: #218838;
+  transform: scale(0.97);
+  box-shadow: inset 4px 4px 10px var(--clay-shadow-dark), inset -4px -4px 10px var(--clay-shadow-light);
 }
 
-/* Modal personalizado para la actualizacion de precios */
+.checkout-button:disabled {
+  background-color: #e0e0e0;
+  color: #9e9e9e;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Custom prompt overlay */
 .custom-prompt-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(252, 228, 236, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(4px);
 }
 
 .custom-prompt-modal {
-  background-color: #2a2a2a;
-  border: 1px solid #444444;
-  border-radius: 12px;
+  background-color: var(--secondary-blue);
+  border: none;
+  border-radius: 32px;
   padding: 2rem;
   width: 90%;
   max-width: 400px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-  color: #ffffff;
+  box-shadow: 12px 12px 24px var(--clay-shadow-dark), -12px -12px 24px var(--clay-shadow-light);
+  color: var(--text-dark);
   text-align: center;
 }
 
@@ -221,17 +256,18 @@
   box-sizing: border-box;
   margin: 1.5rem 0;
   padding: 1rem;
-  font-size: 1.5rem;
-  border-radius: 8px;
-  border: 1px solid #555555;
-  background-color: #1e1e1e;
-  color: #ffffff;
+  font-size: 1.2rem;
+  border-radius: 16px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.7);
+  color: var(--text-dark);
   text-align: center;
   outline: none;
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.05), inset -4px -4px 8px rgba(255, 255, 255, 0.8);
 }
 
 .custom-prompt-input:focus {
-  border-color: #4da6ff;
+  background-color: #ffffff;
 }
 
 .custom-prompt-actions {
@@ -240,50 +276,43 @@
   gap: 1rem;
 }
 
-.prompt-cancel-btn, .prompt-confirm-btn {
+.prompt-cancel-btn, .prompt-confirm-btn, .prompt-delete-btn {
   flex: 1;
-  padding: 1rem;
+  padding: 0.75rem;
   border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: bold;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 4px 4px 8px var(--clay-shadow-dark), -4px -4px 8px var(--clay-shadow-light);
+}
+
+.prompt-cancel-btn:active, .prompt-confirm-btn:active, .prompt-delete-btn:active {
+  transform: scale(0.95);
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.1), inset -3px -3px 6px rgba(255, 255, 255, 0.5);
 }
 
 .prompt-cancel-btn {
-  background-color: #555555;
-  color: #ffffff;
+  background-color: #f5f5f5;
+  color: #757575;
 }
 
 .prompt-confirm-btn {
-  background-color: #4da6ff;
-  color: #000000;
+  background-color: #81c784;
+  color: #1b5e20;
 }
 
 .prompt-delete-btn {
-  flex: 1;
-  padding: 1rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: opacity 0.2s;
-  background-color: #dc3545;
-  color: white;
-}
-
-.prompt-delete-btn:active {
-  opacity: 0.8;
+  background-color: #e57373;
+  color: #ffffff;
 }
 
 .flavor-add-button {
-  border: 2px dashed #4da6ff !important;
-  background-color: transparent !important;
-  color: #4da6ff !important;
+  background-color: var(--secondary-blue) !important;
 }
 
 .flavor-add-button:active {
-  background-color: rgba(77, 166, 255, 0.1) !important;
+  background-color: #bbdefb !important;
 }
+

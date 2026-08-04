@@ -39,7 +39,8 @@ export default function PosMenu() {
   useEffect(() => {
     const loadCatalog = async () => {
       const data = await obtenerProductos();
-      setCatalog(data);
+      const sortedData = data.sort((a, b) => Number(a.precio) - Number(b.precio));
+      setCatalog(sortedData);
     };
     loadCatalog();
   }, []);
@@ -130,7 +131,10 @@ export default function PosMenu() {
       setIsProcessing(true);
       try {
         await actualizarPrecioProducto(itemDef.id, parsedPrice);
-        setCatalog(prev => prev.map(p => p.id === itemDef.id ? { ...p, precio: parsedPrice } : p));
+        setCatalog(prev => {
+          const updatedCatalog = prev.map(p => p.id === itemDef.id ? { ...p, precio: parsedPrice } : p);
+          return updatedCatalog.sort((a, b) => Number(a.precio) - Number(b.precio));
+        });
       } catch (error) {
         console.error('Error al actualizar precio en base de datos', error);
       } finally {
@@ -179,7 +183,10 @@ export default function PosMenu() {
       setIsProcessing(true);
       try {
         const nuevoProducto = await agregarProducto(flavor.trim(), parsedPrice);
-        setCatalog(prev => [...prev, nuevoProducto]);
+        setCatalog(prev => {
+          const updatedCatalog = [...prev, nuevoProducto];
+          return updatedCatalog.sort((a, b) => Number(a.precio) - Number(b.precio));
+        });
       } catch (error) {
         console.error('Error al crear nuevo producto', error);
       } finally {
@@ -212,7 +219,7 @@ export default function PosMenu() {
               title="Quitar un artículo"
             >
               <span className="item-name">{item.flavor}</span>
-              <span className="item-quantity">x{item.quantity} <span className="remove-icon">[-]</span></span>
+              <span className="item-quantity">x{item.quantity} <span className="remove-icon">Remove</span></span>
             </li>
           ))}
         </ul>
@@ -234,7 +241,10 @@ export default function PosMenu() {
             onClick={() => setIsAdminOpen(true)}
             aria-label="Abrir panel de administracion"
           >
-            &#9881;
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'block' }}>
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
           </button>
         </div>
         <div className={`flavor-grid ${isEditMode ? 'edit-mode' : ''}`}>
@@ -245,6 +255,15 @@ export default function PosMenu() {
               onClick={() => handleFlavorClick(itemDef)}
               disabled={isProcessing}
             >
+              <img 
+                src={`/images/${itemDef.sabor.toLowerCase().replace(/\s+/g, '_')}.png`} 
+                alt={itemDef.sabor}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = '/images/default_flavor.png';
+                }}
+                className="flavor-image"
+              />
               <span className="flavor-name-label">{itemDef.sabor}</span>
               <span className="flavor-price-label">${Number(itemDef.precio).toFixed(2)}</span>
             </button>

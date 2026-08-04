@@ -32,8 +32,8 @@ export default function Login({ onLoginSuccess }) {
   return (
     <div className="login-container">
       <div className="login-box">
-        <h2>Acceso Restringido</h2>
-        <p>Por favor ingresa la contraseña para entrar al sistema de la paletería.</p>
+        <h2>¡Bienvenido!</h2>
+        <p>Ingresa la clave para comenzar.</p>
         <form onSubmit={handleSubmit}>
           <input
             type="password"
@@ -46,9 +46,9 @@ export default function Login({ onLoginSuccess }) {
             className={error ? 'input-error' : ''}
             autoFocus
           />
-          {error && <span className="error-text">Contraseña incorrecta</span>}
+          {error && <span className="error-text">La clave es incorrecta, intenta de nuevo.</span>}
           <button type="submit" className="login-button" disabled={isLoading}>
-            {isLoading ? 'Autenticando...' : 'Entrar al Sistema'}
+            {isLoading ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
       </div>

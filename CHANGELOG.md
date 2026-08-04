@@ -1,5 +1,25 @@
 # Registro de Cambios - Sistema POS Paletería
 
+## 🎨 Refactorización Visual y Optimización Móvil (Claymorphism)
+
+### 1. Sistema de Diseño (Claymorphism y Paleta Pastel)
+- **Transición Estética:** Se erradicó el "modo oscuro" primitivo, adoptando el diseño tridimensional "Claymorphism" mediante un intrincado sistema de sombras `box-shadow` duales (luces y sombras `inset` y estáticas) en botones, modales y campos de texto.
+- **Identidad Visual:** Se importó e implementó globalmente la tipografía *Quicksand* de Google Fonts y se definió una paleta de colores temáticos pastel (rosa principal, menta, vainilla y azul cielo).
+- **Consolidación CSS:** Todos los modales del sistema (`AdminPanel`, `CierreDiario`, `CierreMensual`, `Login`) se reescribieron utilizando fondos translúcidos (`rgba`) e integrando la propiedad `backdrop-filter: blur`.
+
+### 2. Optimización Nativa para Celulares (Mobile-First UX)
+- **Cero Latencia en Checkout:** Se reestructuró la sección del pedido (`Cuenta Actual`) con un contenedor *Flexbox*. La lista de productos ahora scrollea independientemente (`overflow-y: auto`), mientras que el botón "Cobrar Cuenta" permanece fijo en la base del panel, resolviendo el problema de desplazamiento infinito.
+- **Ampliación de Visibilidad:** Se expandió el área de la cuenta a `50vh`, permitiendo listar cómodamente el doble de artículos de manera paralela.
+- **Respuesta Táctil Instantánea:** Se implementó `touch-action: manipulation;` a nivel global para bloquear el retraso de 300 ms de los navegadores móviles, y se modificó la etiqueta del *viewport* (`user-scalable=no`, `maximum-scale=1.0`) impidiendo acercamientos involuntarios.
+
+### 3. Lógica Frontend Autónoma (Catálogo Inteligente)
+- **Imágenes Dinámicas:** Se configuró un mapeo automático para renderizar archivos PNG para cada producto a partir de su nombre (transformado a minúsculas y `snake_case`). Incluye un controlador inteligente nativo vía evento `onError` para apuntar a un activo por defecto en caso de recursos inexistentes.
+- **Ordenamiento Predictivo:** Se inyectó una función computada con el método `.sort()` en el manejo del estado para estructurar algorítmicamente todo el menú de visualización, forzando la presentación ordenada de los ítems de **menor a mayor precio** sin interrupción.
+
+### 4. Humanización del Sistema (Copywriting Familiar)
+- **Abolición de Jerga Corporativa:** Se rediseñó totalmente la vista de la barrera de seguridad (`Login.jsx`), reemplazando la terminología técnica estricta (e.g., "Acceso Restringido", "Contraseña", "Autenticando") por texto empático adaptado para un entorno familiar y operativo ("¡Bienvenido!", "Clave", "¡Comenzar!").
+
+***
 ## 🚀 Funcionalidades y Mejoras Generales (Módulo Financiero y UI/UX)
 
 ### 1. Creación del Sistema de Generación de Reportes (PDFs)

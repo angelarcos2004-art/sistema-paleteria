@@ -1,7 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
+
+:root {
+  --primary-pink: #fce4ec;
+  --secondary-mint: #e0f2f1;
+  --secondary-vanilla: #fff9c4;
+  --secondary-blue: #e3f2fd;
+  --text-dark: #37474f;
+  --clay-bg: #e0f2f1;
+  --clay-shadow-light: #ffffff;
+  --clay-shadow-dark: #b0bec5;
+  --clay-border-radius: 28px;
+}
+
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Quicksand', sans-serif;
+  background-color: var(--primary-pink);
+  color: var(--text-dark);
+  touch-action: manipulation;
+  -webkit-font-smoothing: antialiased;
 }
 
 #root {

@@ -1,7 +1,7 @@
 .mensual-container {
   margin-top: 2rem;
   padding-top: 2rem;
-  border-top: 1px solid #333333;
+  border-top: 2px solid rgba(255, 255, 255, 0.6);
 }
 
 .mensual-header {
@@ -14,7 +14,8 @@
 .mensual-title {
   margin: 0;
   font-size: 1.3rem;
-  color: #ffffff;
+  color: var(--text-dark);
+  font-weight: 700;
 }
 
 .mensual-controls {
@@ -24,95 +25,104 @@
 }
 
 .month-picker {
-  background-color: #2a2a2a;
-  border: 1px solid #444444;
-  color: #ffffff;
-  padding: 0.5rem;
-  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: none;
+  color: var(--text-dark);
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
   font-size: 1rem;
+  font-family: inherit;
+  font-weight: 600;
   outline: none;
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.05), inset -3px -3px 6px rgba(255, 255, 255, 0.8);
 }
 
 .export-pdf-btn {
-  background-color: #e63946;
-  color: white;
+  background-color: #ef9a9a;
+  color: var(--text-dark);
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   padding: 0.5rem 1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  box-shadow: 4px 4px 8px var(--clay-shadow-dark), -4px -4px 8px var(--clay-shadow-light);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.export-pdf-btn:hover:not(:disabled) {
-  background-color: #d62828;
+.export-pdf-btn:active:not(:disabled) {
+  transform: scale(0.95);
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.1), inset -3px -3px 6px rgba(255, 255, 255, 0.5);
 }
 
 .export-pdf-btn:disabled {
-  background-color: #555555;
+  background-color: #e0e0e0;
+  color: #9e9e9e;
+  box-shadow: none;
   cursor: not-allowed;
+  transform: none;
 }
 
 .cards-wrapper {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
+  gap: 1.5rem;
   margin-bottom: 2rem;
 }
 
 .summary-card {
-  background-color: #2a2a2a;
-  border-radius: 8px;
-  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  border: 1px solid #444444;
+  border: none;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.05), -6px -6px 12px rgba(255, 255, 255, 0.8);
 }
 
 .summary-card h4 {
   margin: 0 0 0.5rem 0;
-  font-size: 0.9rem;
-  color: #aaaaaa;
+  font-size: 0.95rem;
+  color: #546e7a;
 }
 
 .summary-card .card-value {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: bold;
-  color: #ffffff;
+  color: var(--text-dark);
 }
 
 .summary-card.deficit {
-  background-color: rgba(220, 53, 69, 0.1);
-  border-color: #dc3545;
+  background-color: rgba(239, 154, 154, 0.3);
 }
 
 .summary-card.deficit .card-value {
-  color: #ff6b6b;
+  color: #d32f2f;
 }
 
 .summary-card.surplus {
-  background-color: rgba(40, 167, 69, 0.1);
-  border-color: #28a745;
+  background-color: rgba(165, 214, 167, 0.3);
 }
 
 .summary-card.surplus .card-value {
-  color: #8ce99a;
+  color: #388e3c;
 }
 
 .chart-wrapper {
-  background-color: #1a1a1a;
-  padding: 1rem;
-  border-radius: 8px;
-  border: 1px solid #333333;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 1.5rem;
+  border-radius: 24px;
+  border: none;
+  box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.05), inset -6px -6px 12px rgba(255, 255, 255, 0.8);
 }
 
 .chart-wrapper h4 {
   margin-top: 0;
   margin-bottom: 1rem;
-  font-size: 1rem;
-  color: #aaaaaa;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: var(--text-dark);
   text-align: center;
 }
