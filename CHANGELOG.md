@@ -1,5 +1,16 @@
 # Registro de Cambios - Sistema POS Paletería
 
+## 🍦 Adaptación de Negocio y Control de Sesión
+
+### 1. Ajuste de Lenguaje Comercial
+- **"Cuenta Actual" ➡️ "Pedido Actual":** Se refactorizó el encabezado de la lista activa de compras. El término bancario/formal fue sustituido por uno orgánico ("Pedido Actual"), alineando la interfaz con el contexto real de un mostrador de paletería.
+
+### 2. Infraestructura de Seguridad Operativa
+- **Botón de Cerrar Sesión:** Se integró la función `supabase.auth.signOut()` conectada a un botón final dentro de `AdminPanel.jsx`, permitiendo a los cajeros bloquear el acceso al sistema al finalizar el turno.
+- **Diseño de Alerta Crítica (UI):** El botón de cierre de sesión heredó un fondo rojo pastel (`#ef9a9a`) y texto oscuro, respetando el diseño *Claymorphism* mientras destaca visualmente como una acción destructiva.
+- **Flujo de Confirmación Preventiva:** Se implementó el modal asíncrono `isLogoutConfirmOpen` para interceptar clics accidentales, lanzando un diálogo limpio ("¿Estás seguro de que deseas cerrar la sesión actual?") con un diseño de UI directo y libre de jerga técnica.
+
+***
 ## ✨ Branding, Optimización Móvil y Lenguaje Humano
 
 ### 1. Identidad Visual y Logotipo

@@ -108,3 +108,16 @@
   background-color: #81d4fa;
   color: var(--text-dark);
 }
+
+.admin-footer-actions {
+  margin-top: 1rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid rgba(255, 255, 255, 0.6);
+}
+
+.logout-btn {
+  background-color: #ef9a9a;
+  color: var(--text-dark);
+  font-size: 1.1rem;
+  padding: 1.25rem;
+}

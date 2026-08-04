@@ -214,7 +214,7 @@ export default function PosMenu() {
               style={{ width: '80px', height: '80px', objectFit: 'contain' }} 
               onError={(e) => e.target.style.display = 'none'} 
             />
-            <h2>Cuenta Actual</h2>
+            <h2>Pedido Actual</h2>
           </div>
         </div>
         <p className="summary-text">
