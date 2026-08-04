@@ -12,25 +12,25 @@ export default function AdminPanel({ onClose, isEditMode, setIsEditMode }) {
     <div className="admin-overlay">
       <div className="admin-modal">
         <div className="admin-header">
-          <h2>Panel Administrativo</h2>
+          <h2>Configuración</h2>
           <button className="close-btn" onClick={onClose}>&times;</button>
         </div>
         <div className="admin-body">
           <p className="admin-description">
-            Opciones para modificar el menú y gestionar los cortes de caja.
+            Desde aquí puedes cambiar precios, agregar sabores y ver las ventas.
           </p>
           <button 
             className={`admin-action-btn edit-mode-btn ${isEditMode ? 'active' : ''}`}
             onClick={() => setIsEditMode(prev => !prev)}
           >
-            {isEditMode ? 'Desactivar Modo Edición' : 'Activar Modo Edición'}
+            {isEditMode ? 'Terminar de Editar' : 'Editar Precios y Sabores'}
           </button>
           
           <button 
             className="admin-action-btn cierre-btn"
             onClick={() => setIsClosing(true)}
           >
-            Realizar Cierre Diario
+            Hacer Corte del Día
           </button>
           
           <CierreMensual />

@@ -32,7 +32,15 @@ export default function Login({ onLoginSuccess }) {
   return (
     <div className="login-container">
       <div className="login-box">
-        <h2>¡Bienvenido!</h2>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
+          <img 
+            src="/images/logo.png" 
+            alt="Logo Paletería" 
+            style={{ width: '120px', height: '120px', objectFit: 'contain', filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))' }} 
+            onError={(e) => e.target.style.display = 'none'} 
+          />
+        </div>
+        <h2>¡Bienvenid@!</h2>
         <p>Ingresa la clave para comenzar.</p>
         <form onSubmit={handleSubmit}>
           <input

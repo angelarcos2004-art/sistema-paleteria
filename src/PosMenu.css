@@ -93,8 +93,31 @@
 
 .grid-header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
+}
+
+.search-input {
+  flex: 1; /* Permite que la barra se adapte dinámicamente al ancho disponible */
+  max-width: 100%;
+  margin-right: 1rem; /* Mantiene una distancia segura con el engranaje en pantallas pequeñas */
+  padding: 0.75rem 1.5rem;
+  border-radius: 30px; /* Highly rounded like a pill */
+  border: 2px solid transparent;
+  background-color: rgba(255, 255, 255, 0.7);
+  color: var(--text-dark);
+  font-size: 1.1rem; /* El tamaño mayor a 16px evita el auto-zoom en iOS Safari */
+  font-weight: 600;
+  outline: none;
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.05), inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  background-color: #ffffff;
+  border-color: var(--primary-pink);
 }
 
 .settings-icon-btn {

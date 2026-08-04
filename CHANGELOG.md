@@ -1,5 +1,26 @@
 # Registro de Cambios - Sistema POS Paletería
 
+## ✨ Branding, Optimización Móvil y Lenguaje Humano
+
+### 1. Identidad Visual y Logotipo
+- **Integración de Marca:** Se implementó el logotipo personalizado (`logo.png`) en el sistema. Ahora se renderiza en gran tamaño en la pantalla de bienvenida (`Login.jsx`) y de forma compacta (80px) en el encabezado del Menú de Ventas.
+- **Favicon y Pestaña:** Se reemplazó el icono por defecto de React por el logotipo de la paletería en `index.html` y se actualizó el título estático de la página a **"Paletas Artesanales"**.
+
+### 2. Ergonomía y Estética de Búsqueda (UX/UI)
+- **Barra de Búsqueda Estilo Píldora:** Se rediseñó el buscador de sabores abandonando los bordes cuadrados por un `border-radius: 30px` (estilo píldora) que comulga con el tema *Claymorphism*.
+- **Diseño Responsivo (Mobile-First):** Se forzó la alineación a la izquierda (`margin-right: auto`) y se implementó flexbox elástico (`flex: 1`) para evitar superposiciones con el botón de ajustes en pantallas pequeñas. El tamaño de fuente de la barra se ancló en `1.1rem` para evadir el auto-zoom nativo de iOS Safari.
+
+### 3. Redacción Amigable y Traducción Contable (Cero Tecnicismos)
+- **Desjergonización de la Interfaz:** Se reescribieron los textos del Panel de Configuración y de la Vista de Cobro, sustituyendo términos corporativos/técnicos por lenguaje coloquial de negocio (e.g., "Artículos" por "Paletas", "Realizar Cierre Diario" por "Hacer Corte del Día", y "¡Bienvenido!" por "¡Bienvenid@!").
+- **Traducción de KPIs Financieros:** Tanto en la vista de Resumen Mensual como en el PDF autogenerado, se reemplazó la jerga contable compleja:
+  - *"Ingreso Bruto Mensual"* ➡️ **"Ventas Registradas"**
+  - *"Total Efectivo Real"* ➡️ **"Dinero Real en Caja"**
+  - *"Desfase Acumulado / Merma"* ➡️ **"Faltante o Sobrante"**
+
+### 4. Pulido de Generación de Reportes
+- **Armonía Visual en PDF:** Se forzó el nodo DOM subyacente de la gráfica de pastel (`Recharts`) a utilizar un fondo blanco puro (`#ffffff`). Al ser capturado por `html2canvas`, el PDF generado adquiere una apariencia limpia, profesional e idónea para impresión, abandonando el recuadro negro que rompía el estilo.
+
+***
 ## 🎨 Refactorización Visual y Optimización Móvil (Claymorphism)
 
 ### 1. Sistema de Diseño (Claymorphism y Paleta Pastel)

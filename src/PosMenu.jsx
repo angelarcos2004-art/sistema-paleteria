@@ -11,6 +11,9 @@ export default function PosMenu() {
   
   // Estado local para almacenar los productos traidos desde la base de datos.
   const [catalog, setCatalog] = useState([]);
+  
+  // Estado local para filtrar sabores mediante búsqueda.
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Bandera de estado para alternar la funcionalidad de los botones (cobro vs actualizacion).
   // Inicializada desde sessionStorage para persistir ante recargas de pagina.
@@ -204,10 +207,18 @@ export default function PosMenu() {
     <div className="pos-container">
       <section className="bill-section">
         <div className="bill-header">
-          <h2>Cuenta Actual</h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <img 
+              src="/images/logo.png" 
+              alt="Logo Paletería" 
+              style={{ width: '80px', height: '80px', objectFit: 'contain' }} 
+              onError={(e) => e.target.style.display = 'none'} 
+            />
+            <h2>Cuenta Actual</h2>
+          </div>
         </div>
         <p className="summary-text">
-          <span>Artículos: {getTotalItems()}</span>
+          <span>Paletas: {getTotalItems()}</span>
           <span>Total: ${getTotalCost().toFixed(2)}</span>
         </p>
         <ul className="bill-list">
@@ -219,7 +230,7 @@ export default function PosMenu() {
               title="Quitar un artículo"
             >
               <span className="item-name">{item.flavor}</span>
-              <span className="item-quantity">x{item.quantity} <span className="remove-icon">Remove</span></span>
+              <span className="item-quantity">x{item.quantity} <span className="remove-icon">Quitar</span></span>
             </li>
           ))}
         </ul>
@@ -236,6 +247,13 @@ export default function PosMenu() {
 
       <section className="grid-section">
         <div className="grid-header">
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Buscar sabor..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
           <button 
             className="settings-icon-btn"
             onClick={() => setIsAdminOpen(true)}
@@ -248,7 +266,7 @@ export default function PosMenu() {
           </button>
         </div>
         <div className={`flavor-grid ${isEditMode ? 'edit-mode' : ''}`}>
-          {catalog.map((itemDef) => (
+          {catalog.filter(item => item.sabor.toLowerCase().includes(searchQuery.toLowerCase())).map((itemDef) => (
             <button 
               key={itemDef.id} 
               className="flavor-button"

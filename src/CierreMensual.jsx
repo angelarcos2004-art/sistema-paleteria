@@ -106,7 +106,7 @@ export default function CierreMensual() {
 
     autoTable(doc, {
       startY: currentY + 15,
-      head: [['Fecha de Cierre', 'Monto Esperado', 'Efectivo Fisico', 'Merma / Excedente']],
+      head: [['Fecha de Corte', 'Ventas (Sistema)', 'Dinero en Caja', 'Faltante / Sobrante']],
       body: closureRows,
     });
 
@@ -117,7 +117,7 @@ export default function CierreMensual() {
   return (
     <div className="mensual-container">
       <div className="mensual-header">
-        <h3 className="mensual-title">Balance y Cierre Mensual</h3>
+        <h3 className="mensual-title">Resumen Mensual de Ventas</h3>
         
         <div className="mensual-controls">
           <input 
@@ -138,22 +138,22 @@ export default function CierreMensual() {
       
       <div className="cards-wrapper">
         <div className="summary-card">
-          <h4>Ingreso Bruto Mensual</h4>
+          <h4>Ventas Registradas</h4>
           <span className="card-value">${totalGrossIncome.toFixed(2)}</span>
         </div>
         <div className="summary-card">
-          <h4>Total Efectivo Real</h4>
+          <h4>Dinero Real en Caja</h4>
           <span className="card-value">${totalActualCash.toFixed(2)}</span>
         </div>
         <div className={`summary-card ${totalGap < 0 ? 'deficit' : 'surplus'}`}>
-          <h4>Desfase Acumulado (Merma)</h4>
+          <h4>Faltante o Sobrante</h4>
           <span className="card-value">${totalGap.toFixed(2)}</span>
         </div>
       </div>
 
       <div className="chart-wrapper">
         <h4>Frecuencia de Ventas por Sabor</h4>
-        <div id="pdf-chart-node" style={{ backgroundColor: '#1a1a1a', padding: '1rem' }}>
+        <div id="pdf-chart-node" style={{ backgroundColor: '#ffffff', padding: '1rem', borderRadius: '16px' }}>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -170,7 +170,7 @@ export default function CierreMensual() {
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip contentStyle={{ backgroundColor: '#2a2a2a', border: '1px solid #444444', color: '#ffffff' }} />
+              <Tooltip contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #eeeeee', color: '#333333', borderRadius: '8px' }} />
               <Legend />
             </PieChart>
           </ResponsiveContainer>
