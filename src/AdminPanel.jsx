@@ -28,42 +28,45 @@ export default function AdminPanel({ onClose, isEditMode, setIsEditMode, isCourt
         </div>
         <div className="admin-body">
           <p className="admin-description">Administra el inventario, ajusta precios y supervisa los ingresos y cortes diarios.</p>
-          <button 
-            className={`admin-action-btn edit-mode-btn ${isEditMode ? 'active' : ''}`}
-            onClick={() => {
-              setIsEditMode(prev => !prev);
-              onClose(); // Cerrar panel para ir directo a la caja a editar
-            }}
-          >
-            {isEditMode ? 'Terminar de Editar' : 'Editar Precios y Sabores'}
-          </button>
+          <div className="admin-grid">
+            <button 
+              className={`admin-grid-btn edit-mode-btn ${isEditMode ? 'active' : ''}`}
+              onClick={() => {
+                setIsEditMode(prev => !prev);
+                onClose(); // Cerrar panel para ir directo a la caja a editar
+              }}
+            >
+              <span className="grid-icon">🍧</span>
+              {isEditMode ? 'Terminar Edición' : 'Precios y Sabores'}
+            </button>
 
-          <button 
-            className={`admin-action-btn ${isCourtesyMode ? 'active' : ''}`}
-            style={{ backgroundColor: isCourtesyMode ? '#1565c0' : '#2196f3', color: 'white', marginTop: '10px' }}
-            onClick={() => {
-              setIsCourtesyMode(prev => !prev);
-              onClose(); // Cerrar panel para ir directo a la caja a regalar
-            }}
-          >
-            {isCourtesyMode ? 'Desactivar Modo Cortesía' : 'Modo Cortesía'}
-          </button>
-          
-          <button 
-            className="admin-action-btn cierre-btn"
-            style={{ marginTop: '10px' }}
-            onClick={() => setIsClosing(true)}
-          >
-            Cortes de Caja Diarios
-          </button>
-          
-          <button 
-            className="admin-action-btn"
-            style={{ backgroundColor: '#ff9800', color: 'white', marginTop: '10px' }}
-            onClick={() => setIsControlFinancieroOpen(true)}
-          >
-            Control Financiero e Inversiones
-          </button>
+            <button 
+              className={`admin-grid-btn courtesy-btn ${isCourtesyMode ? 'active' : ''}`}
+              onClick={() => {
+                setIsCourtesyMode(prev => !prev);
+                onClose(); // Cerrar panel para ir directo a la caja a regalar
+              }}
+            >
+              <span className="grid-icon">🎁</span>
+              {isCourtesyMode ? 'Cortesías Activas' : 'Modo Cortesía'}
+            </button>
+            
+            <button 
+              className="admin-grid-btn cierre-btn"
+              onClick={() => setIsClosing(true)}
+            >
+              <span className="grid-icon">💵</span>
+              Cortes Diarios
+            </button>
+            
+            <button 
+              className="admin-grid-btn finanzas-btn"
+              onClick={() => setIsControlFinancieroOpen(true)}
+            >
+              <span className="grid-icon">📊</span>
+              Control Financiero
+            </button>
+          </div>
           
           <div className="admin-footer-actions">
             <button 
