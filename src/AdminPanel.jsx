@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { supabase } from './supabaseClient';
 import CierreDiario from './CierreDiario';
-import CierreMensual from './CierreMensual';
+import ControlFinanciero from './ControlFinanciero';
 import './AdminPanel.css';
 
 // Componente transaccional para agrupar controles administrativos.
-export default function AdminPanel({ onClose, isEditMode, setIsEditMode }) {
+export default function AdminPanel({ onClose, isEditMode, setIsEditMode, isCourtesyMode, setIsCourtesyMode }) {
   // Estado local para delegar el montaje del componente de cierre diario.
   const [isClosing, setIsClosing] = useState(false);
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
+  const [isControlFinancieroOpen, setIsControlFinancieroOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -26,24 +27,43 @@ export default function AdminPanel({ onClose, isEditMode, setIsEditMode }) {
           <button className="close-btn" onClick={onClose}>&times;</button>
         </div>
         <div className="admin-body">
-          <p className="admin-description">
-            Desde aquí puedes cambiar precios, agregar sabores y ver las ventas.
-          </p>
+          <p className="admin-description">Administra el inventario, ajusta precios y supervisa los ingresos y cortes diarios.</p>
           <button 
             className={`admin-action-btn edit-mode-btn ${isEditMode ? 'active' : ''}`}
-            onClick={() => setIsEditMode(prev => !prev)}
+            onClick={() => {
+              setIsEditMode(prev => !prev);
+              onClose(); // Cerrar panel para ir directo a la caja a editar
+            }}
           >
             {isEditMode ? 'Terminar de Editar' : 'Editar Precios y Sabores'}
+          </button>
+
+          <button 
+            className={`admin-action-btn ${isCourtesyMode ? 'active' : ''}`}
+            style={{ backgroundColor: isCourtesyMode ? '#1565c0' : '#2196f3', color: 'white', marginTop: '10px' }}
+            onClick={() => {
+              setIsCourtesyMode(prev => !prev);
+              onClose(); // Cerrar panel para ir directo a la caja a regalar
+            }}
+          >
+            {isCourtesyMode ? 'Desactivar Modo Cortesía' : 'Modo Cortesía'}
           </button>
           
           <button 
             className="admin-action-btn cierre-btn"
+            style={{ marginTop: '10px' }}
             onClick={() => setIsClosing(true)}
           >
-            Hacer Corte del Día
+            Cortes de Caja Diarios
           </button>
           
-          <CierreMensual />
+          <button 
+            className="admin-action-btn"
+            style={{ backgroundColor: '#ff9800', color: 'white', marginTop: '10px' }}
+            onClick={() => setIsControlFinancieroOpen(true)}
+          >
+            Control Financiero e Inversiones
+          </button>
           
           <div className="admin-footer-actions">
             <button 
@@ -57,6 +77,9 @@ export default function AdminPanel({ onClose, isEditMode, setIsEditMode }) {
       </div>
       {/* Montaje condicional del componente de cierre en una capa superior */}
       {isClosing && <CierreDiario onClose={() => setIsClosing(false)} />}
+
+      {/* Montaje condicional del componente de Control Financiero */}
+      {isControlFinancieroOpen && <ControlFinanciero onClose={() => setIsControlFinancieroOpen(false)} />}
       
       {/* Modal de confirmación para cerrar sesión */}
       {isLogoutConfirmOpen && (

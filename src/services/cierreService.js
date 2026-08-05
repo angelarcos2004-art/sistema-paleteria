@@ -81,3 +81,23 @@ export const fetchSalesByCloseId = async (closeId) => {
     return [];
   }
 };
+
+// Retorna el historial reciente de cierres para auditoría
+export const fetchRecentClosures = async (limitNum = 30) => {
+  try {
+    const { data, error } = await supabase
+      .from('cierres_diarios')
+      .select('*')
+      .order('cerrado_en', { ascending: false })
+      .limit(limitNum);
+
+    if (error) {
+      throw new Error(`Error recuperando historial: ${error.message}`);
+    }
+
+    return data;
+  } catch (err) {
+    console.error('Fallo en fetchRecentClosures:', err);
+    return [];
+  }
+};

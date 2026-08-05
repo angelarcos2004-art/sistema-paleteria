@@ -126,3 +126,24 @@
   color: var(--text-dark);
   text-align: center;
 }
+
+@media (max-width: 600px) {
+  .mensual-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    text-align: center;
+  }
+  .mensual-controls {
+    flex-direction: column;
+    width: 100%;
+  }
+  .month-picker, .export-pdf-btn {
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  .cards-wrapper {
+    grid-template-columns: 1fr;
+  }
+}

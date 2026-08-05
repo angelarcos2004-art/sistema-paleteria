@@ -155,3 +155,17 @@
   margin-bottom: 2rem;
   font-weight: bold;
 }
+
+@media (max-width: 600px) {
+  .cierre-actions {
+    flex-direction: column;
+  }
+  
+  .cierre-button {
+    width: 100%;
+  }
+
+  .cierre-modal {
+    padding: 1.5rem;
+  }
+}

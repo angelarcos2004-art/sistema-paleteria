@@ -21,10 +21,20 @@ export default function PosMenu() {
     return sessionStorage.getItem('paleteria_edit_mode') === 'true';
   });
 
+  const [isCourtesyMode, setIsCourtesyMode] = useState(() => {
+    return sessionStorage.getItem('paleteria_courtesy_mode') === 'true';
+  });
+
   // Sincronizar el estado de isEditMode con sessionStorage cada vez que cambie.
   useEffect(() => {
     sessionStorage.setItem('paleteria_edit_mode', isEditMode);
+    if (isEditMode) setIsCourtesyMode(false); // No pueden estar activos al mismo tiempo
   }, [isEditMode]);
+
+  useEffect(() => {
+    sessionStorage.setItem('paleteria_courtesy_mode', isCourtesyMode);
+    if (isCourtesyMode) setIsEditMode(false); // No pueden estar activos al mismo tiempo
+  }, [isCourtesyMode]);
   
   // Estado local para prevenir iteraciones de red multiples durante el guardado o edicion.
   const [isProcessing, setIsProcessing] = useState(false);
@@ -56,7 +66,12 @@ export default function PosMenu() {
       setEditModalConfig({ isOpen: true, itemDef, inputValue: itemDef.precio });
     } else {
       setCurrentBill((prevBill) => {
-        const existingItemIndex = prevBill.findIndex(item => item.flavor === itemDef.sabor);
+        const isFree = isCourtesyMode;
+        const priceToApply = isFree ? 0 : itemDef.precio;
+
+        const existingItemIndex = prevBill.findIndex(
+          item => item.flavor === itemDef.sabor && item.isCourtesy === isFree
+        );
         
         if (existingItemIndex >= 0) {
           // Se crea una copia del arreglo anterior para mantener la inmutabilidad de React.
@@ -70,17 +85,19 @@ export default function PosMenu() {
           
           return updatedBill;
         } else {
-          // Asignacion del precio especifico definido en el catalogo durante la instanciacion.
-          return [...prevBill, { flavor: itemDef.sabor, quantity: 1, price: itemDef.precio }];
+          // Asignacion del precio especifico definido en el catalogo durante la instanciacion o 0 si es cortesia
+          return [...prevBill, { flavor: itemDef.sabor, quantity: 1, price: priceToApply, isCourtesy: isFree }];
         }
       });
     }
   };
 
   // Funcion para decrementar o eliminar un articulo directamente de la cuenta.
-  const handleRemoveItem = (flavorToRemove) => {
+  const handleRemoveItem = (flavorToRemove, isCourtesy) => {
     setCurrentBill((prevBill) => {
-      const existingItemIndex = prevBill.findIndex(item => item.flavor === flavorToRemove);
+      const existingItemIndex = prevBill.findIndex(
+        item => item.flavor === flavorToRemove && item.isCourtesy === isCourtesy
+      );
       if (existingItemIndex === -1) return prevBill;
 
       const updatedBill = [...prevBill];
@@ -222,14 +239,17 @@ export default function PosMenu() {
           <span>Total: ${getTotalCost().toFixed(2)}</span>
         </p>
         <ul className="bill-list">
-          {currentBill.map((item) => (
+          {currentBill.map((item, idx) => (
             <li 
-              key={item.flavor} 
+              key={`${item.flavor}-${item.isCourtesy ? 'free' : 'paid'}-${idx}`} 
               className="bill-item removable-item" 
-              onClick={() => handleRemoveItem(item.flavor)}
+              onClick={() => handleRemoveItem(item.flavor, item.isCourtesy)}
               title="Quitar un artículo"
+              style={item.isCourtesy ? { backgroundColor: '#e3f2fd', borderLeft: '4px solid #2196f3' } : {}}
             >
-              <span className="item-name">{item.flavor}</span>
+              <span className="item-name">
+                {item.flavor} {item.isCourtesy && <span style={{fontSize: '0.8rem', color: '#1976d2', fontWeight: 'bold'}}>(Cortesía)</span>}
+              </span>
               <span className="item-quantity">x{item.quantity} <span className="remove-icon">Quitar</span></span>
             </li>
           ))}
@@ -239,8 +259,11 @@ export default function PosMenu() {
             className="checkout-button"
             onClick={handleCheckout}
             disabled={isProcessing}
+            style={isCourtesyMode ? { backgroundColor: '#bbdefb', color: '#0d47a1', border: '2px solid #1976d2' } : {}}
           >
-            {isProcessing ? 'Cobrando...' : 'Cobrar Cuenta'}
+            {isProcessing 
+              ? (isCourtesyMode ? 'Registrando...' : 'Cobrando...') 
+              : (isCourtesyMode ? 'Registrar Cortesía' : 'Cobrar Cuenta')}
           </button>
         )}
       </section>
@@ -265,13 +288,19 @@ export default function PosMenu() {
             </svg>
           </button>
         </div>
-        <div className={`flavor-grid ${isEditMode ? 'edit-mode' : ''}`}>
+        {isCourtesyMode && (
+          <div style={{ backgroundColor: '#bbdefb', padding: '10px', textAlign: 'center', color: '#1565c0', fontWeight: 'bold', borderRadius: '12px', marginBottom: '15px' }}>
+            🎁 Estás en MODO CORTESÍA. Todas las paletas que selecciones se cobrarán en $0 y se descontarán del inventario.
+          </div>
+        )}
+        <div className={`flavor-grid ${isEditMode ? 'edit-mode' : ''} ${isCourtesyMode ? 'courtesy-mode' : ''}`}>
           {catalog.filter(item => item.sabor.toLowerCase().includes(searchQuery.toLowerCase())).map((itemDef) => (
             <button 
               key={itemDef.id} 
               className="flavor-button"
               onClick={() => handleFlavorClick(itemDef)}
               disabled={isProcessing}
+              style={isCourtesyMode ? { border: '2px solid #2196f3', backgroundColor: '#e3f2fd' } : {}}
             >
               <img 
                 src={`/images/${itemDef.sabor.toLowerCase().replace(/\s+/g, '_')}.png`} 
@@ -283,7 +312,9 @@ export default function PosMenu() {
                 className="flavor-image"
               />
               <span className="flavor-name-label">{itemDef.sabor}</span>
-              <span className="flavor-price-label">${Number(itemDef.precio).toFixed(2)}</span>
+              <span className="flavor-price-label" style={isCourtesyMode ? {color: '#1976d2'} : {}}>
+                {isCourtesyMode ? 'Cortesía' : `$${Number(itemDef.precio).toFixed(2)}`}
+              </span>
             </button>
           ))}
           {isEditMode && (
@@ -304,6 +335,8 @@ export default function PosMenu() {
           onClose={() => setIsAdminOpen(false)} 
           isEditMode={isEditMode}
           setIsEditMode={setIsEditMode}
+          isCourtesyMode={isCourtesyMode}
+          setIsCourtesyMode={setIsCourtesyMode}
         />
       )}
 

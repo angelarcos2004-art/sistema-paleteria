@@ -35,20 +35,51 @@ export const fetchMonthlySalesByFlavor = async (year, month) => {
 
     if (error) throw new Error(error.message);
 
-    // Reduce map para totalizar frecuencia e ingresos segmentados.
-    const aggregatedData = data.reduce((acc, row) => {
-      const flavorStr = row.sabor;
-      if (!acc[flavorStr]) {
-        acc[flavorStr] = { name: flavorStr, cantidad: 0, ingresos: 0 };
-      }
-      acc[flavorStr].cantidad += 1;
-      acc[flavorStr].ingresos += Number(row.precio);
-      return acc;
-    }, {});
+    // Reduce map para totalizar frecuencia e ingresos segmentados, separando cortesías.
+    const aggregatedSales = {};
+    const aggregatedCourtesy = {};
 
-    return Object.values(aggregatedData);
+    data.forEach((row) => {
+      const flavorStr = row.sabor;
+      const isCourtesy = Number(row.precio) === 0;
+
+      if (isCourtesy) {
+        if (!aggregatedCourtesy[flavorStr]) aggregatedCourtesy[flavorStr] = { name: flavorStr, cantidad: 0 };
+        aggregatedCourtesy[flavorStr].cantidad += 1;
+      } else {
+        if (!aggregatedSales[flavorStr]) aggregatedSales[flavorStr] = { name: flavorStr, cantidad: 0, ingresos: 0 };
+        aggregatedSales[flavorStr].cantidad += 1;
+        aggregatedSales[flavorStr].ingresos += Number(row.precio);
+      }
+    });
+
+    return {
+      salesData: Object.values(aggregatedSales),
+      courtesyData: Object.values(aggregatedCourtesy)
+    };
   } catch (err) {
     console.error('Fallo en fetchMonthlySalesByFlavor', err);
-    return [];
+    return { salesData: [], courtesyData: [] };
+  }
+};
+
+// Obtiene el total invertido en el mes
+export const fetchMonthlyInvestments = async (year, month) => {
+  try {
+    const numericMonth = month + 1; // Supabase guardó el mes como 1-12
+    const { data, error } = await supabase
+      .from('compras_semanales')
+      .select('monto_total_invertido')
+      .eq('mes', numericMonth);
+      // Faltaría el año, pero por ahora en la tabla no hay columna de año explícita, solo fechas
+      // Si la tabla crece a varios años, esto debería refactorizarse para usar gte/lte en 'fecha_registro'
+
+    if (error) throw new Error(error.message);
+
+    const totalInvertido = data.reduce((acc, row) => acc + Number(row.monto_total_invertido), 0);
+    return totalInvertido;
+  } catch (err) {
+    console.error('Fallo en fetchMonthlyInvestments', err);
+    return 0;
   }
 };
