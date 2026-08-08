@@ -182,7 +182,7 @@ export default function ControlFinanciero({ onClose }) {
 
     if (resumen.closures && resumen.closures.length > 0) {
       const closureRows = resumen.closures.map(c => [
-        new Date(c.cerrado_en).toLocaleDateString(),
+        new Date(c.cerrado_en + 'Z').toLocaleDateString(),
         `$${Number(c.total_esperado).toFixed(2)}`,
         `$${Number(c.efectivo_real).toFixed(2)}`,
         `$${Number(c.diferencia).toFixed(2)}`
@@ -541,7 +541,7 @@ export default function ControlFinanciero({ onClose }) {
                                     const diff = Number(c.diferencia);
                                     return (
                                       <tr key={`cl-${idx}`}>
-                                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>{new Date(c.cerrado_en).toLocaleDateString()}</td>
+                                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>{new Date(c.cerrado_en + 'Z').toLocaleDateString()}</td>
                                         <td style={{ padding: '8px', borderBottom: '1px solid #eee', textAlign: 'right' }}>${Number(c.total_esperado).toFixed(2)}</td>
                                         <td style={{ padding: '8px', borderBottom: '1px solid #eee', textAlign: 'right' }}>${Number(c.efectivo_real).toFixed(2)}</td>
                                         <td style={{ padding: '8px', borderBottom: '1px solid #eee', textAlign: 'right', color: diff < 0 ? '#d32f2f' : (diff > 0 ? '#388e3c' : 'inherit'), fontWeight: diff !== 0 ? 'bold' : 'normal' }}>

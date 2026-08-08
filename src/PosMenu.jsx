@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { registrarVentasBulk } from './services/ventasService';
-import { obtenerProductos, actualizarPrecioProducto, agregarProducto, eliminarProducto } from './services/productosService';
+import { obtenerProductos, actualizarProducto, agregarProducto, eliminarProducto } from './services/productosService';
 import AdminPanel from './AdminPanel';
 import './PosMenu.css';
 
@@ -44,7 +44,7 @@ export default function PosMenu() {
   const [isAdminOpen, setIsAdminOpen] = useState(false);
 
   // Estados locales para gobernar los modales personalizados de edicion, creacion y eliminacion.
-  const [editModalConfig, setEditModalConfig] = useState({ isOpen: false, itemDef: null, inputValue: '' });
+  const [editModalConfig, setEditModalConfig] = useState({ isOpen: false, itemDef: null, inputValue: '', flavorValue: '' });
   const [addModalConfig, setAddModalConfig] = useState({ isOpen: false, flavor: '', price: '' });
   const [deleteConfirmConfig, setDeleteConfirmConfig] = useState({ isOpen: false, itemDef: null });
 
@@ -63,7 +63,7 @@ export default function PosMenu() {
   const handleFlavorClick = async (itemDef) => {
     if (isEditMode) {
       // Apertura del modal customizado inyectando el valor actual del articulo.
-      setEditModalConfig({ isOpen: true, itemDef, inputValue: itemDef.precio });
+      setEditModalConfig({ isOpen: true, itemDef, inputValue: itemDef.precio, flavorValue: itemDef.sabor });
     } else {
       setCurrentBill((prevBill) => {
         const isFree = isCourtesyMode;
@@ -144,35 +144,36 @@ export default function PosMenu() {
 
   // Funcion delegada para consolidar el guardado del nuevo precio desde el modal.
   const handleEditConfirm = async () => {
-    const { itemDef, inputValue } = editModalConfig;
+    const { itemDef, inputValue, flavorValue } = editModalConfig;
     const parsedPrice = parseFloat(inputValue);
+    const newFlavor = (flavorValue || '').trim();
     
-    if (!isNaN(parsedPrice) && parsedPrice >= 0) {
+    if (newFlavor !== '' && !isNaN(parsedPrice) && parsedPrice >= 0) {
       setIsProcessing(true);
       try {
-        await actualizarPrecioProducto(itemDef.id, parsedPrice);
+        await actualizarProducto(itemDef.id, itemDef.sabor, newFlavor, parsedPrice);
         setCatalog(prev => {
-          const updatedCatalog = prev.map(p => p.id === itemDef.id ? { ...p, precio: parsedPrice } : p);
+          const updatedCatalog = prev.map(p => p.id === itemDef.id ? { ...p, sabor: newFlavor, precio: parsedPrice } : p);
           return updatedCatalog.sort((a, b) => Number(a.precio) - Number(b.precio));
         });
       } catch (error) {
-        console.error('Error al actualizar precio en base de datos', error);
+        console.error('Error al actualizar precio/sabor en base de datos', error);
       } finally {
         setIsProcessing(false);
       }
     }
     // Restablecimiento del estado local incondicional.
-    setEditModalConfig({ isOpen: false, itemDef: null, inputValue: '' });
+    setEditModalConfig({ isOpen: false, itemDef: null, inputValue: '', flavorValue: '' });
   };
 
   const handleEditCancel = () => {
-    setEditModalConfig({ isOpen: false, itemDef: null, inputValue: '' });
+    setEditModalConfig({ isOpen: false, itemDef: null, inputValue: '', flavorValue: '' });
   };
 
   // Intercepta el intento de eliminacion para renderizar el modal de advertencia personalizado.
   const handleDeleteRequest = () => {
     setDeleteConfirmConfig({ isOpen: true, itemDef: editModalConfig.itemDef });
-    setEditModalConfig({ isOpen: false, itemDef: null, inputValue: '' });
+    setEditModalConfig({ isOpen: false, itemDef: null, inputValue: '', flavorValue: '' });
   };
 
   // Funcion delegada para eliminar permanentemente un articulo una vez confirmada la advertencia.
@@ -343,14 +344,23 @@ export default function PosMenu() {
       {editModalConfig.isOpen && (
         <div className="custom-prompt-overlay">
           <div className="custom-prompt-modal">
-            <h3 style={{ marginTop: 0 }}>Actualizar Precio</h3>
-            <p>Ingrese el nuevo precio para <strong>{editModalConfig.itemDef.sabor}</strong>:</p>
+            <h3 style={{ marginTop: 0 }}>Actualizar Producto</h3>
+            <p>Modifica el nombre o precio:</p>
+            <input 
+              type="text" 
+              className="custom-prompt-input"
+              value={editModalConfig.flavorValue}
+              onChange={(e) => setEditModalConfig({ ...editModalConfig, flavorValue: e.target.value })}
+              style={{ marginBottom: '0.5rem' }}
+              placeholder="Nombre del Sabor"
+              autoFocus
+            />
             <input 
               type="number" 
               className="custom-prompt-input"
               value={editModalConfig.inputValue}
               onChange={(e) => setEditModalConfig({ ...editModalConfig, inputValue: e.target.value })}
-              autoFocus
+              placeholder="Precio"
             />
             <div className="custom-prompt-actions">
               <button className="prompt-delete-btn" onClick={handleDeleteRequest}>Eliminar</button>

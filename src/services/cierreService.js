@@ -101,3 +101,42 @@ export const fetchRecentClosures = async (limitNum = 30) => {
     return [];
   }
 };
+
+// Retorna las ventas actuales que aún no forman parte de ningún corte.
+export const fetchPendingSales = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('ventas')
+      .select('id, sabor, precio, creado_en')
+      .is('cierre_diario_id', null)
+      .order('creado_en', { ascending: false });
+
+    if (error) {
+      throw new Error(`Error recuperando ventas pendientes: ${error.message}`);
+    }
+
+    return data;
+  } catch (err) {
+    console.error('Fallo en fetchPendingSales:', err);
+    return [];
+  }
+};
+
+// Elimina una venta específica que aún no ha sido cerrada.
+export const deletePendingSale = async (id) => {
+  try {
+    const { error } = await supabase
+      .from('ventas')
+      .delete()
+      .eq('id', id)
+      .is('cierre_diario_id', null);
+
+    if (error) {
+      throw new Error(`Fallo al eliminar venta: ${error.message}`);
+    }
+    return true;
+  } catch (err) {
+    console.error('Error de red al eliminar venta', err);
+    throw err;
+  }
+};

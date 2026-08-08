@@ -3,6 +3,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { fetchExpectedTotal, executeDailyClose, fetchSalesByCloseId } from './services/cierreService';
 import HistorialCortes from './HistorialCortes';
+import VentasActuales from './VentasActuales';
 import './CierreDiario.css';
 
 export default function CierreDiario({ onClose }) {
@@ -146,10 +147,16 @@ export default function CierreDiario({ onClose }) {
             Hacer Corte
           </button>
           <button 
+            className={`tab-btn ${activeTab === 'ventas-actuales' ? 'active' : ''}`}
+            onClick={() => setActiveTab('ventas-actuales')}
+          >
+            Ventas Actuales
+          </button>
+          <button 
             className={`tab-btn ${activeTab === 'historial' ? 'active' : ''}`}
             onClick={() => setActiveTab('historial')}
           >
-            Historial de Cortes
+            Historial
           </button>
         </div>
         
@@ -269,6 +276,10 @@ export default function CierreDiario({ onClose }) {
           </div>
         )}
           </>
+        )}
+
+        {activeTab === 'ventas-actuales' && (
+          <VentasActuales />
         )}
 
         {activeTab === 'historial' && (

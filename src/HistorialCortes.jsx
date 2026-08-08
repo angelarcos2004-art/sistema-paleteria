@@ -61,7 +61,7 @@ export default function HistorialCortes({ onClose }) {
         actual: Number(cierre.efectivo_real),
         diff: Number(cierre.diferencia),
         id: cierre.id,
-        fecha: new Date(cierre.cerrado_en).toLocaleString()
+        fecha: new Date(cierre.cerrado_en + 'Z').toLocaleString()
       });
     } catch (error) {
       console.error('Error al cargar detalle del cierre:', error);
@@ -193,7 +193,7 @@ export default function HistorialCortes({ onClose }) {
             ) : (
               <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                 {closures.map(cierre => {
-                  const fecha = new Date(cierre.cerrado_en);
+                  const fecha = new Date(cierre.cerrado_en + 'Z');
                   const diff = Number(cierre.diferencia);
                   return (
                     <li key={cierre.id} style={{ padding: '15px', borderBottom: '1px solid #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fcfcfc', borderRadius: '8px', marginBottom: '8px', border: '1px solid #e0e0e0' }}>

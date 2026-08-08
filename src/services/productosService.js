@@ -19,17 +19,29 @@ export const obtenerProductos = async () => {
   }
 };
 
-// Funcion asincrona para modificar el precio de un producto existente.
-export const actualizarPrecioProducto = async (id, nuevoPrecio) => {
+// Funcion asincrona para modificar el producto existente y propagar el cambio de nombre.
+export const actualizarProducto = async (id, oldSabor, nuevoSabor, nuevoPrecio) => {
   try {
     const { data, error } = await supabase
       .from('productos')
-      .update({ precio: nuevoPrecio })
+      .update({ sabor: nuevoSabor, precio: nuevoPrecio })
       .eq('id', id)
       .select();
 
     if (error) {
-      throw new Error(`Fallo al actualizar precio: ${error.message}`);
+      throw new Error(`Fallo al actualizar producto: ${error.message}`);
+    }
+
+    // Si el nombre del sabor cambió, actualizar todo el historial de ventas
+    if (oldSabor && oldSabor !== nuevoSabor) {
+      const { error: salesError } = await supabase
+        .from('ventas')
+        .update({ sabor: nuevoSabor })
+        .eq('sabor', oldSabor);
+        
+      if (salesError) {
+        console.warn('Advertencia: No se pudo propagar el cambio de nombre al historial de ventas:', salesError.message);
+      }
     }
 
     return data;
